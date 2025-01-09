@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Register.css'
+import process from 'process';
 
 function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
+    const apiURL = process.env.REACT_APP_API_BASE_URL;
 
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/register', { username, password });
+            // await axios.post('http://localhost:5000/register', { username, password });
+            // alert(`${apiURL}register`)
+            await axios.post(`${apiURL}register`, { username, password });
             alert('Registration successful! Please login.');
             navigate('/');
         } catch (error) {
@@ -46,6 +50,9 @@ function Register() {
                 />
                 <button type="submit" className="submit-button">Register</button>
             </form>
+            <p>
+                Already have an account? <Link to="/">Login</Link>
+            </p>
             {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
     );

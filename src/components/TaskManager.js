@@ -14,10 +14,12 @@ function TaskManager() {
     const username = localStorage.getItem('username'); // Get username from localStorage
     const navigate = useNavigate()
 
+    const apiURL = process.env.REACT_APP_API_BASE_URL;
+
     //
     const fetchTasks = async () => {
         const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/tasks', { headers: { Authorization: `Bearer ${token}` } });
+        const response = await axios.get(`${apiURL}tasks`, { headers: { Authorization: `Bearer ${token}` } });
         setTasks(response.data);
     };
 
@@ -38,7 +40,7 @@ function TaskManager() {
         console.log('Headers:', headers); // Debugging
 
         try {
-            const response = await axios.post('http://localhost:5000/tasks', { text: taskText }, { headers });
+            const response = await axios.post(`${apiURL}tasks`, { text: taskText }, { headers });
             console.log('Task added:', response.data); // Debugging purposes
             alert('Task added successfully!');
             setTaskText('');
@@ -52,7 +54,7 @@ function TaskManager() {
     const editTask = async (id, updatedText) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`http://localhost:5000/tasks/${id}`, { text: updatedText }, {
+            await axios.put(`${apiURL}tasks/${id}`, { text: updatedText }, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             alert('Task updated successfully!');
@@ -67,7 +69,7 @@ function TaskManager() {
 
     const deleteTask = async (id) => {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/tasks/${id}`, {
+        await axios.delete(`${apiURL}tasks/${id}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         fetchTasks();
@@ -119,7 +121,7 @@ function TaskManager() {
                             <>
                                 <span>{index + 1}.</span>
                                 <span className='text-span'>{task.text}</span>
-                                <button  className='edit-button' onClick={() => { setEditTaskId(task._id); setUpdatedText(task.text); }}>
+                                <button className='edit-button' onClick={() => { setEditTaskId(task._id); setUpdatedText(task.text); }}>
                                     <FaRegEdit />
                                 </button>
                                 <button className='delete-button' onClick={() => deleteTask(task._id)}>X</button>
